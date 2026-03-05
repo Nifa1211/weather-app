@@ -1,69 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="./assets/favicon.svg" type="image/svg">
-    <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Weather App</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <!-- Preconnect for font performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome with preload -->
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="./style.css">
+  <title>Weather</title>
 </head>
-
 <body>
-    <main>
-        <section>
-            <form id="city-form">
-                <div class="search">
-                    <input type="text" id="search-input" placeholder="enter city name">
-                </div>
-                <button id="search-btn" class="search-btn">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-            </form>
-            <div class="loading" hidden>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <div class="error" hidden>
-                <i class="fa-solid fa-circle-exclamation"></i>
-                <span>Unknown City</span>
-            </div>
-            <div class="weather" hidden>
-                <div class="heading">
-                    <div class="heading-content">
-                        <h2 id="behavior"></h2>
-                        <h1 class="temp"><span id="temp"></span><span>°C</span></h1>
-                    </div>
-                    <div class="weather-icon-placeholder">
-                        <img id="weather-icon" alt="Weather Icon">
-                    </div>
-                </div>
-                <div class="information">
-                    <div class="humidity info">
-                        <div class="flex">
-                            <i class="fa-solid fa-water"></i>
-                            <h2><span id="humidity"></span>%</h2>
-                        </div>
-                        <p>Humidity</p>
-                    </div>
-                    <div class="wind-speed info">
-                        <div class="flex">
-                            <i class="fa-solid fa-wind"></i>
-                            <h1><span id="wind-speed"></span> km/h</h1>
-                        </div>
-                        <p>Wind Speed</p>
-                    </div>
-                </div>
-                <h3 id="city"></h3>
-            </div>
-        </section>
-    </main>
-    <script src="./main.js" type="module"></script>
-</body>
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
 
+  <main>
+    <header>
+      <p class="app-label">LIVE WEATHER</p>
+      <h1 class="app-title">Sky<span>Cast</span></h1>
+    </header>
+
+    <section class="card" role="region" aria-label="Weather search and results">
+      <!-- Search -->
+      <form id="city-form" autocomplete="off" novalidate>
+        <div class="search-wrap">
+          <i class="fa-solid fa-location-dot search-icon" aria-hidden="true"></i>
+          <input
+            type="text"
+            id="search-input"
+            placeholder="City name…"
+            aria-label="Enter city name"
+            spellcheck="false"
+          >
+          <button id="search-btn" type="submit" aria-label="Search weather">
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </form>
+
+      <!-- Loading -->
+      <div class="loading" hidden role="status" aria-label="Loading weather data">
+        <span></span><span></span><span></span>
+      </div>
+
+      <!-- Error -->
+      <div class="error" hidden role="alert">
+        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+        <span>City not found. Try again.</span>
+      </div>
+
+      <!-- Weather result -->
+      <div class="weather" hidden aria-live="polite">
+        <div class="weather-hero">
+          <div class="weather-icon-wrap">
+            <img id="weather-icon" alt="Weather condition icon" width="96" height="96">
+          </div>
+          <div class="weather-primary">
+            <p id="behavior" class="condition-label"></p>
+            <div class="temp-row">
+              <span id="temp" class="temp-value"></span>
+              <span class="temp-unit">°C</span>
+            </div>
+            <h2 id="city" class="city-name"></h2>
+          </div>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="weather-stats">
+          <div class="stat">
+            <i class="fa-solid fa-droplet" aria-hidden="true"></i>
+            <div class="stat-info">
+              <span class="stat-value"><span id="humidity"></span>%</span>
+              <span class="stat-label">Humidity</span>
+            </div>
+          </div>
+          <div class="stat-sep" aria-hidden="true"></div>
+          <div class="stat">
+            <i class="fa-solid fa-wind" aria-hidden="true"></i>
+            <div class="stat-info">
+              <span class="stat-value"><span id="wind-speed"></span> <small>km/h</small></span>
+              <span class="stat-label">Wind Speed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./main.js" type="module"></script>
+</body>
 </html>
